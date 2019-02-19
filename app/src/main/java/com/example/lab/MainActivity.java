@@ -1,10 +1,8 @@
 package com.example.lab;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
-import java.security.Permission;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
