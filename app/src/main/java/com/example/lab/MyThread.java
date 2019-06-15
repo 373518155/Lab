@@ -3,11 +3,13 @@ package com.example.lab;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.view.SurfaceHolder;
 
 public class MyThread extends Thread {
     private SurfaceHolder surfaceHolder;
 
+    // 是否結束的標志位
     boolean finish;
 
     public MyThread(SurfaceHolder surfaceHolder) {
@@ -17,27 +19,32 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        Canvas canvas = null;
         try {
+            Paint paint = new Paint();
+            paint.setColor(Color.parseColor("#FF0000"));
+            paint.setTextSize(40);
+
             while (!finish) {
+                SLog.info("looping");
                 // 獲取Canvas對象，并鎖定之
-                canvas = surfaceHolder.lockCanvas();
+                Canvas canvas = surfaceHolder.lockCanvas();
                 if (canvas == null) {
                     continue;
                 }
 
-                Paint paint = new Paint();
-                paint.setColor(Color.parseColor("#FF0000"));
-                canvas.drawText("hello", 0, 0, paint);
+                // 繪制時，需要先清除畫布，否則上次繪制的還殘留在這里
+                canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-                Thread.sleep(1000);
+                // 繪制當前時間戳
+                long timestamp = System.currentTimeMillis();
+                canvas.drawText(String.valueOf(timestamp), 150, 150, paint);
+
+                // 解除鎖定，并提交修改的內容
+                surfaceHolder.unlockCanvasAndPost(canvas);
+                Thread.sleep(100);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            if (canvas != null) {
-                surfaceHolder.unlockCanvasAndPost(canvas);
-            }
         }
     }
 

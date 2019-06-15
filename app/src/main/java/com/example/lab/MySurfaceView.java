@@ -30,6 +30,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        // surface創建好時，啟動線程
         myThread.start();
     }
 
@@ -40,6 +41,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        // surface銷毀時，結束
         myThread.terminate();
     }
 }
