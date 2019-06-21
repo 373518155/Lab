@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public String onSuccess(@Nullable String data) {
                 mCamera = getCameraInstance();
                 mPreview = new CameraPreview(MainActivity.this, mCamera);
+                mCamera.setPreviewCallback(mPreview);  // 必须在startPreview()方法之前调用
                 FrameLayout preview = findViewById(R.id.camera_preview);
                 preview.addView(mPreview);
                 return null;

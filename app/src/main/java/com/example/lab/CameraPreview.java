@@ -1,13 +1,14 @@
 package com.example.lab;
 
 import android.content.Context;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.IOException;
 
-public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
@@ -68,5 +69,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         if (mCamera != null) {
             mCamera.release();
         }
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        // https://blog.csdn.net/tanmengwen/article/details/41412425
+        // Android -- 将NV21图像保存成JPEG
+        long threadId = Thread.currentThread().getId();
+        SLog.info("onPreviewFrame, threadId[%d], length[%d]", threadId, data.length);
     }
 }
