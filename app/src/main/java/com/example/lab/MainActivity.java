@@ -48,8 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PermissionUtil.requestStoragePermission(this);
         PermissionUtil.requestStoragePermission(this);
 
-        findViewById(R.id.btn_get_number_of_cameras).setOnClickListener(this);
+
         findViewById(R.id.btn_capture).setOnClickListener(this);
+        findViewById(R.id.btn_yuv).setOnClickListener(this);
 
         PermissionUtil.actionWithPermission(this, Permission.Group.CAMERA, "使用本APP需要授予", new CommonCallback() {
             @Override
@@ -73,11 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.btn_get_number_of_cameras) {
-            int numberOfCameras = Camera.getNumberOfCameras();
-            SLog.info("numberOfCameras[%d]", numberOfCameras);
-        } else if (id == R.id.btn_capture) {
+        if (id == R.id.btn_capture) {
             mCamera.takePicture(null, null, pictureCallback);
+        } else if (id == R.id.btn_yuv) {
+            mPreview.setOneShot(true);
         }
     }
 

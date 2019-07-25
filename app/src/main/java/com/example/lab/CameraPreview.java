@@ -3,14 +3,21 @@ package com.example.lab;
 import android.content.Context;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.os.Environment;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
     private SurfaceHolder mHolder;
     private Camera mCamera;
+
+    boolean oneShot;
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
@@ -30,6 +37,36 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
+
+            Camera.Parameters parameters = mCamera.getParameters();
+            int format = parameters.getPreviewFormat();
+            int previewFrameRate = parameters.getPreviewFrameRate();
+            Camera.Size previewSize = parameters.getPreviewSize();
+            int pictureFormat = parameters.getPictureFormat();
+            Camera.Size pictureSize = parameters.getPictureSize();
+
+            SLog.info("format[%d], previewFrameRate[%d], previewSize[%d,%d], pictureFormat[%d], pictureSize[%d,%d]",
+                    format, previewFrameRate, previewSize.width, previewSize.height, pictureFormat, pictureSize.width, pictureSize.height);
+
+            List<Integer> formatList = parameters.getSupportedPreviewFormats();
+            for (Integer fmt : formatList) {
+                SLog.info("SupportedPreviewFormat[%d]", fmt);
+            }
+
+            formatList = parameters.getSupportedPictureFormats();
+            for (Integer fmt : formatList) {
+                SLog.info("SupportedPictureFormat[%d]", fmt);
+            }
+
+            List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+            for (Camera.Size size : sizeList) {
+                SLog.info("SupportedPreviewSize[%d,%d]", size.width, size.height);
+            }
+
+            sizeList = parameters.getSupportedPictureSizes();
+            for (Camera.Size size : sizeList) {
+                SLog.info("SupportedPictureSize[%d,%d]", size.width, size.height);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,6 +113,26 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // https://blog.csdn.net/tanmengwen/article/details/41412425
         // Android -- 将NV21图像保存成JPEG
         long threadId = Thread.currentThread().getId();
-        SLog.info("onPreviewFrame, threadId[%d], length[%d]", threadId, data.length);
+        // SLog.info("onPreviewFrame, threadId[%d], length[%d]", threadId, data.length);
+        if (oneShot) {
+            String absoluteFilePath = Environment.getExternalStorageDirectory() + "/1/" + System.currentTimeMillis() + ".nv21";
+            SLog.info("absoluteFilePath[%s]", absoluteFilePath);
+            File file = new File(absoluteFilePath);
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(data);
+                fos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            oneShot = false;
+        }
+    }
+
+
+    public void setOneShot(boolean oneShot) {
+        this.oneShot = oneShot;
     }
 }
