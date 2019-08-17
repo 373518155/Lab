@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScrollActivity extends AppCompatActivity implements View.OnClickListener {
-    ScrollView nsvContainer;
+    CustomScrollView nsvContainer;
     RecyclerView recyclerView;
 
     TextAdapter adapter;
@@ -36,6 +36,8 @@ public class ScrollActivity extends AppCompatActivity implements View.OnClickLis
                 int height = nsvContainer.getHeight();
 
                 SLog.info("height[%d], rawY[%d]", height, Util.getYOnScreen(nsvContainer));
+                nsvContainer.setRefView(recyclerView);
+                nsvContainer.setyLocation(Util.getYOnScreen(nsvContainer));
                 ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
                 layoutParams.height = height;
                 recyclerView.setLayoutParams(layoutParams);

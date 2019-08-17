@@ -44,7 +44,8 @@ public class CustomScrollView extends ScrollView {
 
     @Override
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        SLog.info("onNestedPreScroll");
+        // 手指向上撥，dy > 0  手指向下撥，dy < 0
+        SLog.info("onNestedPreScroll, dy[%d]", dy);
         if (dy == 0) {
             return;
         }
@@ -53,13 +54,29 @@ public class CustomScrollView extends ScrollView {
         int diff = refY - yLocation;
 
         consumed[0] = 0;
-        if (dy > diff) {
-            scrollBy(0, diff);
-            consumed[1] = diff;
-        } else {
-            scrollBy(0, dy);
-            consumed[1] = dy;
+        if (dy > 0) {  // 手指向上撥(dy > 0)
+            if (dy > diff) {
+                scrollBy(0, diff);
+                consumed[1] = diff;
+            } else {
+                scrollBy(0, dy);
+                consumed[1] = dy;
+            }
+        } else { // 手指向下撥(dy < 0)
+            if (diff > 0) {
+                scrollBy(0, dy);
+                consumed[1] = dy;
+            } else {
+                if (Math.abs(diff) > Math.abs(dy)) {
+                    scrollBy(0, dy);
+                    consumed[1] = dy;
+                } else {
+                    scrollBy(0, diff);
+                    consumed[1] = diff;
+                }
+            }
         }
+
     }
 
     @Override
