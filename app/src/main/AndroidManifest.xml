@@ -13,16 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScrollActivity">
+        <activity android:name=".VelocityActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ThirdActivity">
+        <activity android:name=".ScrollActivity">
         </activity>
-        <activity android:name=".SecondActivity"></activity>
+        <activity android:name=".ThirdActivity"></activity>
+        <activity android:name=".SecondActivity" />
         <activity android:name=".MainActivity" />
     </application>
 

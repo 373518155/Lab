@@ -1,5 +1,7 @@
 package com.example.lab;
 
+import android.support.v4.view.NestedScrollingParent;
+import android.support.v4.view.NestedScrollingParent2;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,8 @@ public class ScrollActivity extends AppCompatActivity implements View.OnClickLis
 
         findViewById(R.id.btn_test).setOnClickListener(this);
         nsvContainer = findViewById(R.id.nsv_container);
+        SLog.info("nsvContainer[%s]", nsvContainer instanceof NestedScrollingParent);
+        SLog.info("nsvContainer[%s]", nsvContainer instanceof NestedScrollingParent2);
         recyclerView = findViewById(R.id.recycler_view);
         nsvContainer.post(new Runnable() {
             @Override

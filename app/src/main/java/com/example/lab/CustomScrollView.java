@@ -8,6 +8,9 @@ import android.widget.ScrollView;
 public class CustomScrollView extends ScrollView {
     View refView;
 
+    /**
+     * 容器頂部在屏幕的位置
+     */
     int yLocation;
 
     public CustomScrollView(Context context) {
@@ -50,6 +53,7 @@ public class CustomScrollView extends ScrollView {
             return;
         }
 
+        // 對比參考子View是否滑動到父容器View頂部
         int refY = Util.getYOnScreen(refView);
         int diff = refY - yLocation;
 
