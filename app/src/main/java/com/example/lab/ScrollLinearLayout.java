@@ -26,10 +26,18 @@ public class ScrollLinearLayout extends LinearLayout {
     public void computeScroll() {
         super.computeScroll();
         SLog.info("HERE");
+
+        if (mScroller.computeScrollOffset()) {
+            int currX = mScroller.getCurrX();
+            int currY = mScroller.getCurrY();
+            SLog.info("currX[%d], currY[%d]", currX, currY);
+            scrollTo(currX, currY);
+            invalidate();
+        }
     }
 
     public void cScroll() {
-        mScroller.startScroll(0, getScrollY(), 0, -100, 2000);
+        mScroller.startScroll(0, getScrollY(), 0, 500, 1000);
         invalidate();
     }
 }
