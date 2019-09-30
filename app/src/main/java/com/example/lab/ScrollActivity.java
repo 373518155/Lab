@@ -17,7 +17,10 @@ import java.util.List;
 
 public class ScrollActivity extends AppCompatActivity implements View.OnClickListener {
     CustomScrollView nsvContainer;
-    RecyclerView recyclerView;
+    MaxHeightRecyclerView recyclerView;
+
+
+    int currentValue;
 
     TextAdapter adapter;
     List<String> stringList = new ArrayList<>();
@@ -30,6 +33,8 @@ public class ScrollActivity extends AppCompatActivity implements View.OnClickLis
         initData();
 
         findViewById(R.id.btn_test).setOnClickListener(this);
+        findViewById(R.id.btn_add).setOnClickListener(this);
+
         nsvContainer = findViewById(R.id.nsv_container);
         SLog.info("nsvContainer[%s]", nsvContainer instanceof NestedScrollingParent);
         SLog.info("nsvContainer[%s]", nsvContainer instanceof NestedScrollingParent2);
@@ -38,13 +43,11 @@ public class ScrollActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void run() {
                 int height = nsvContainer.getHeight();
+                recyclerView.setMaxHeight(height);
 
                 SLog.info("height[%d], rawY[%d]", height, Util.getYOnScreen(nsvContainer));
                 nsvContainer.setRefView(recyclerView);
                 nsvContainer.setyLocation(Util.getYOnScreen(nsvContainer));
-                ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
-                layoutParams.height = height;
-                recyclerView.setLayoutParams(layoutParams);
 
                 populateData();
             }
@@ -52,8 +55,9 @@ public class ScrollActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initData() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             stringList.add(String.valueOf(i));
+            currentValue = i;
         }
     }
 
@@ -69,6 +73,10 @@ public class ScrollActivity extends AppCompatActivity implements View.OnClickLis
         if (id == R.id.btn_test) {
             SLog.info("here");
             nsvContainer.scrollBy(0, 20);
+        } else if (id == R.id.btn_add) {
+            currentValue++;
+            stringList.add(String.valueOf(currentValue));
+            adapter.setNewData(stringList);
         }
     }
 
