@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.ScrollView;
 
 public class CustomScrollView extends ScrollView {
+    /**
+     * 參考子View，比如RecyclerView
+     */
     View refView;
 
     /**
@@ -99,12 +102,32 @@ public class CustomScrollView extends ScrollView {
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
         boolean result = super.onNestedPreFling(target, velocityX, velocityY);
         SLog.info("onNestedPreFling, result[%s], velocityY[%s]", result, velocityY);
-        return result;
+
+        // 對比參考子View是否滑動到父容器View頂部
+        int refY = Util.getYOnScreen(refView);
+        int diff = refY - yLocation;
+
+
+        SLog.info("refY[%d], yLocation[%d], diff[%d]", refY, yLocation, diff);
+
+        if (velocityY > 0) { // 向上滾動
+            if (refY - yLocation > 0) {  // 如果RecyclerView還沒越過父View頂部，由父View滾動
+                return true;
+            } else { // 否則，如果向上滾動，并且已經越過父View頂部，由子View滾動
+                return false;
+            }
+        } else { // 向下滾動
+            if (refY - yLocation < 0) {  // 如果RecyclerView已經越過父View頂部，由父View滾動
+                return true;
+            } else { // 否則，如果向下滾動，并且還沒越過父View頂部，由子View滾動
+                return false;
+            }
+        }
     }
 
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
-        SLog.info("onNestedFling");
+        SLog.info("onNestedFling******************************************");
         return super.onNestedFling(target, velocityX, velocityY, consumed);
     }
 }
